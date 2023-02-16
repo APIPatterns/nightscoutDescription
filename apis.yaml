@@ -1,0 +1,24 @@
+name: Nightscout API index entry
+description: This repo contains an apis.yaml file that points to the OpenAPI description for the NightScout API 
+tags:
+    - application programming interface
+    - API
+    - Kiota
+    - OpenApi
+    - Diabetes
+created: '2023-02-16'
+specificationVersion: '0.15'
+apis:
+    - 
+        name: NightScout
+        description: API for accessing continuous glucose monitoring data
+        properties:
+            - 
+                type: X-openapi
+                url: 'https://raw.githubusercontent.com/nightscout/cgm-remote-monitor/master/lib/api3/swagger.yaml'
+
+maintainers:
+    - 
+        FN: Darrel
+        X-mastodon: "@darrel_miller@mastodon.social"
+        email: darrel@tavis.ca
