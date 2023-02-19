@@ -42,7 +42,7 @@ namespace nightscout {
         @route("food")
         interface foodDocument extends DocumentCollection<Food> {}
 
-        @route("treatment")
+        @route("treatments")
         interface treatmentDocument extends DocumentCollection<Treatment> {}
 
         @route("profile")

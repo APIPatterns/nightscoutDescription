@@ -3640,7 +3640,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnauthorizedFailedResponse'
-  /v3/treatment:
+  /v3/treatments:
     post:
       operationId: treatmentDocument_create
       summary: 'CREATE: Inserts a new document into the collection'
@@ -3818,7 +3818,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotAcceptableFailedResponse'
-  /v3/treatment/history:
+  /v3/treatments/history:
     get:
       operationId: treatmentDocument_getCollectionHistory
       summary: 'HISTORY: Retrieves incremental changes since dateTime in header'
@@ -3892,7 +3892,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /v3/treatment/history/{lastModified}}:
+  /v3/treatments/history/{lastModified}}:
     get:
       operationId: treatmentDocument_history2
       summary: 'HISTORY: Retrieves incremental changes since timestamp in path'
@@ -3940,7 +3940,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /v3/treatment/{identifier}:
+  /v3/treatments/{identifier}:
     get:
       operationId: treatmentDocument_read
       summary: 'READ: Retrieves a single document from the collection'
