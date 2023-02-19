@@ -4373,6 +4373,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnauthorizedFailedResponse'
+security:
+  - AccessToken: []
+  - JwtToken: []
 components:
   schemas:
     ApiPermissions:
@@ -4402,6 +4405,35 @@ components:
           format: int32
       required:
         - status
+    Cage:
+      type: object
+      properties:
+        found:
+          type: boolean
+        age:
+          type: integer
+          format: int32
+        treatmentDate:
+          type: integer
+          format: int64
+        checkForAlert:
+          type: boolean
+        days:
+          type: integer
+          format: int32
+        hours:
+          type: integer
+          format: int32
+        notes:
+          type: string
+        minFractions:
+          type: integer
+          format: int32
+        level:
+          type: integer
+          format: int32
+        display:
+          type: string
     DeviceStatus:
       type: object
       properties:
@@ -4716,9 +4748,9 @@ components:
         bwp:
           $ref: '#/components/schemas/object'
         cage:
-          $ref: '#/components/schemas/object'
+          $ref: '#/components/schemas/Cage'
         sage:
-          $ref: '#/components/schemas/object'
+          $ref: '#/components/schemas/Sage'
         basal:
           $ref: '#/components/schemas/object'
         dbsize:
@@ -4726,20 +4758,6 @@ components:
         runtimestate:
           $ref: '#/components/schemas/RuntimeState'
       required:
-        - bgnow
-        - delta
-        - buckets
-        - direction
-        - upbat
-        - iob
-        - cob
-        - pump
-        - loop
-        - bwp
-        - cage
-        - sage
-        - basal
-        - dbsize
         - runtimestate
     RuntimeState:
       type: object
@@ -4748,6 +4766,51 @@ components:
           type: string
       required:
         - state
+    Sage:
+      type: object
+      properties:
+        Sensor Start:
+          $ref: '#/components/schemas/SensorStart'
+        Sensor Change:
+          $ref: '#/components/schemas/SensorChange'
+        min:
+          type: string
+    SensorChange:
+      type: object
+      properties:
+        found:
+          type: boolean
+        treatmentDate:
+          type: integer
+          format: int64
+        age:
+          type: integer
+          format: int32
+        days:
+          type: integer
+          format: int32
+        hours:
+          type: integer
+          format: int32
+        notes:
+          type: string
+        minFractions:
+          type: integer
+          format: int32
+        display:
+          type: string
+        displayLong:
+          type: string
+        level:
+          type: integer
+          format: int32
+    SensorStart:
+      type: object
+      properties:
+        found:
+          type: boolean
+      required:
+        - found
     Settings:
       type: object
       properties:
@@ -4935,6 +4998,14 @@ components:
       required:
         - status
         - identifier
+  securitySchemes:
+    AccessToken:
+      type: apiKey
+      in: query
+      name: token
+    JwtToken:
+      type: http
+      scheme: bearer
 servers:
   - url: /api
     description: default endpoint

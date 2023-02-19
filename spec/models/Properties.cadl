@@ -1,19 +1,20 @@
+using Cadl.Http;
 
 model Properties {
-    bgnow: object;
-    delta: object;
-    buckets: object[];
-    direction: object;
-    upbat: object;
-    iob: object;
-    cob: object;
-    pump: object;
-    loop: object;
-    bwp: object;
-    cage: object;
-    sage: object;
-    basal: object;
-    dbsize: object;
+    bgnow?: object;
+    delta?: object;
+    buckets?: object[];
+    direction?: object;
+    upbat?: object;
+    iob?: object;
+    cob?: object;
+    pump?: object;
+    loop?: object;
+    bwp?: object;
+    cage?: Cage;
+    sage?: Sage;
+    basal?: object;
+    dbsize?: object;
     runtimestate: RuntimeState;    
 }
 
@@ -21,3 +22,38 @@ model RuntimeState {
     state: string;
 }
 
+model Cage {
+    found?: boolean,
+    age?: int32,
+    treatmentDate?: int64;
+    checkForAlert?: boolean,
+    days?: int32,
+    hours?: int32,
+    notes?: string,
+    minFractions?: int32,
+    level?: int32,
+    display?: string
+}
+
+model Sage {
+    "Sensor Start"?: SensorStart;
+    "Sensor Change"?: SensorChange;
+    min?: string;
+}
+
+model SensorStart {
+    found: boolean
+}
+
+model SensorChange {
+    found?: boolean;
+    treatmentDate?: int64;
+    age?: int32;
+    days?: int32;
+    hours?: int32;
+    notes?: string;
+    minFractions?: int32;
+    display?: string;
+    displayLong?: string;
+    level?: int32
+}

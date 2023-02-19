@@ -18,6 +18,7 @@ using Cadl.Http;
     title: "Nightscout API",
     version: "3.0.3"
 })
+@useAuth(AccessToken | JwtToken)
 @server("/api","default endpoint")
 namespace nightscout {
 
@@ -30,7 +31,6 @@ namespace nightscout {
         op getSelectedProperties(@path properties: string[]): Properties;
     }
 
-    @useAuth(AccessToken | JwtToken)
     @route("v3")
     namespace v3 {
         @route("devicestatus")
