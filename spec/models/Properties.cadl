@@ -1,0 +1,23 @@
+
+model Properties {
+    bgnow: object;
+    delta: object;
+    buckets: object[];
+    direction: object;
+    upbat: object;
+    iob: object;
+    cob: object;
+    pump: object;
+    loop: object;
+    bwp: object;
+    cage: object;
+    sage: object;
+    basal: object;
+    dbsize: object;
+    runtimestate: RuntimeState;    
+}
+
+model RuntimeState {
+    state: string;
+}
+

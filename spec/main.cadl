@@ -10,6 +10,7 @@ import "./models/Treatment.cadl";
 import "./models/Profile.cadl";
 import "./models/Settings.cadl";
 import "./models/Other.cadl";
+import "./models/Properties.cadl";
 
 using Cadl.Http;
 
@@ -17,36 +18,48 @@ using Cadl.Http;
     title: "Nightscout API",
     version: "3.0.3"
 })
-@useAuth(AccessToken | JwtToken)
-@server("/api/v3","default endpoint")
+@server("/api","default endpoint")
 namespace nightscout {
 
-    @route("devicestatus")
-    interface deviceStatusDocument extends DocumentCollection<DeviceStatus> {}
+    @route("v2")
+    namespace v2 {
+        @route("properties")
+        op getProperties(): OkResult<Properties>;
 
-    @route("entries")
-    interface entryDocument extends DocumentCollection<Entry> {}
+        @route("properties/{properties}")
+        op getSelectedProperties(@path properties: string[]): OkResult<Properties>;
+    }
 
-    @route("food")
-    interface foodDocument extends DocumentCollection<Food> {}
+    @useAuth(AccessToken | JwtToken)
+    @route("v3")
+    namespace v3 {
+        @route("devicestatus")
+        interface deviceStatusDocument extends DocumentCollection<DeviceStatus> {}
 
-    @route("treatment")
-    interface treatmentDocument extends DocumentCollection<Treatment> {}
+        @route("entries")
+        interface entryDocument extends DocumentCollection<Entry> {}
 
-    @route("profile")
-    interface profileDocument extends DocumentCollection<Profile> {}
+        @route("food")
+        interface foodDocument extends DocumentCollection<Food> {}
 
-    @route("settings")
-    interface settingsDocument extends DocumentCollection<Settings> {}
+        @route("treatment")
+        interface treatmentDocument extends DocumentCollection<Treatment> {}
 
-    @route("version")
-    op getVersion(): OkResult<VersionResult> | UnauthenticatedFailedResponse | UnauthorizedFailedResponse;
+        @route("profile")
+        interface profileDocument extends DocumentCollection<Profile> {}
 
-    @route("status")
-    op getStatus(): OkResult<StatusResult> | UnauthenticatedFailedResponse | UnauthorizedFailedResponse;
+        @route("settings")
+        interface settingsDocument extends DocumentCollection<Settings> {}
 
-    @route("lastmodified")
-    op getLastModified(): OkResult<LastModifiedResult> | UnauthenticatedFailedResponse | UnauthorizedFailedResponse;
+        @route("version")
+        op getVersion(): OkResult<VersionResult> | UnauthenticatedFailedResponse | UnauthorizedFailedResponse;
+
+        @route("status")
+        op getStatus(): OkResult<StatusResult> | UnauthenticatedFailedResponse | UnauthorizedFailedResponse;
+
+        @route("lastmodified")
+        op getLastModified(): OkResult<LastModifiedResult> | UnauthenticatedFailedResponse | UnauthorizedFailedResponse;
+    }
 }
 
 model AccessToken is ApiKeyAuth<ApiKeyLocation.query,"token">;

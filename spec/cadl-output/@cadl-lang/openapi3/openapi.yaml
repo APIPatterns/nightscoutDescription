@@ -45,7 +45,56 @@ info:
           Standard APIv3 document model uses only `date` field for storing a timestamp of the event recorded by the document. But there is a fallback option to fill `created_at` field as well automatically on each insert/update, just to keep all older components working.
 tags: []
 paths:
-  /devicestatus:
+  /v2/properties:
+    get:
+      operationId: v2_getProperties
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    $ref: '#/components/schemas/Properties'
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkResult<Properties>
+  /v2/properties/{properties}:
+    get:
+      operationId: v2_getSelectedProperties
+      parameters:
+        - name: properties
+          in: path
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    $ref: '#/components/schemas/Properties'
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkResult<Properties>
+  /v3/devicestatus:
     post:
       operationId: deviceStatusDocument_create
       summary: 'CREATE: Inserts a new document into the collection'
@@ -223,7 +272,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotAcceptableFailedResponse'
-  /devicestatus/history:
+  /v3/devicestatus/history:
     get:
       operationId: deviceStatusDocument_getCollectionHistory
       summary: 'HISTORY: Retrieves incremental changes since dateTime in header'
@@ -297,7 +346,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /devicestatus/history/{lastModified}}:
+  /v3/devicestatus/history/{lastModified}}:
     get:
       operationId: deviceStatusDocument_history2
       summary: 'HISTORY: Retrieves incremental changes since timestamp in path'
@@ -345,7 +394,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /devicestatus/{identifier}:
+  /v3/devicestatus/{identifier}:
     get:
       operationId: deviceStatusDocument_read
       summary: 'READ: Retrieves a single document from the collection'
@@ -745,7 +794,7 @@ paths:
                 required:
                   - status
                 x-cadl-name: StatusResponse<422>
-  /entries:
+  /v3/entries:
     post:
       operationId: entryDocument_create
       summary: 'CREATE: Inserts a new document into the collection'
@@ -923,7 +972,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotAcceptableFailedResponse'
-  /entries/history:
+  /v3/entries/history:
     get:
       operationId: entryDocument_getCollectionHistory
       summary: 'HISTORY: Retrieves incremental changes since dateTime in header'
@@ -997,7 +1046,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /entries/history/{lastModified}}:
+  /v3/entries/history/{lastModified}}:
     get:
       operationId: entryDocument_history2
       summary: 'HISTORY: Retrieves incremental changes since timestamp in path'
@@ -1045,7 +1094,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /entries/{identifier}:
+  /v3/entries/{identifier}:
     get:
       operationId: entryDocument_read
       summary: 'READ: Retrieves a single document from the collection'
@@ -1445,7 +1494,7 @@ paths:
                 required:
                   - status
                 x-cadl-name: StatusResponse<422>
-  /food:
+  /v3/food:
     post:
       operationId: foodDocument_create
       summary: 'CREATE: Inserts a new document into the collection'
@@ -1623,7 +1672,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotAcceptableFailedResponse'
-  /food/history:
+  /v3/food/history:
     get:
       operationId: foodDocument_getCollectionHistory
       summary: 'HISTORY: Retrieves incremental changes since dateTime in header'
@@ -1697,7 +1746,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /food/history/{lastModified}}:
+  /v3/food/history/{lastModified}}:
     get:
       operationId: foodDocument_history2
       summary: 'HISTORY: Retrieves incremental changes since timestamp in path'
@@ -1745,7 +1794,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /food/{identifier}:
+  /v3/food/{identifier}:
     get:
       operationId: foodDocument_read
       summary: 'READ: Retrieves a single document from the collection'
@@ -2145,9 +2194,9 @@ paths:
                 required:
                   - status
                 x-cadl-name: StatusResponse<422>
-  /lastmodified:
+  /v3/lastmodified:
     get:
-      operationId: getLastModified
+      operationId: v3_getLastModified
       parameters: []
       responses:
         '200':
@@ -2178,7 +2227,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnauthorizedFailedResponse'
-  /profile:
+  /v3/profile:
     post:
       operationId: profileDocument_create
       summary: 'CREATE: Inserts a new document into the collection'
@@ -2356,7 +2405,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotAcceptableFailedResponse'
-  /profile/history:
+  /v3/profile/history:
     get:
       operationId: profileDocument_getCollectionHistory
       summary: 'HISTORY: Retrieves incremental changes since dateTime in header'
@@ -2430,7 +2479,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /profile/history/{lastModified}}:
+  /v3/profile/history/{lastModified}}:
     get:
       operationId: profileDocument_history2
       summary: 'HISTORY: Retrieves incremental changes since timestamp in path'
@@ -2478,7 +2527,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /profile/{identifier}:
+  /v3/profile/{identifier}:
     get:
       operationId: profileDocument_read
       summary: 'READ: Retrieves a single document from the collection'
@@ -2878,7 +2927,7 @@ paths:
                 required:
                   - status
                 x-cadl-name: StatusResponse<422>
-  /settings:
+  /v3/settings:
     post:
       operationId: settingsDocument_create
       summary: 'CREATE: Inserts a new document into the collection'
@@ -3056,7 +3105,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotAcceptableFailedResponse'
-  /settings/history:
+  /v3/settings/history:
     get:
       operationId: settingsDocument_getCollectionHistory
       summary: 'HISTORY: Retrieves incremental changes since dateTime in header'
@@ -3130,7 +3179,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /settings/history/{lastModified}}:
+  /v3/settings/history/{lastModified}}:
     get:
       operationId: settingsDocument_history2
       summary: 'HISTORY: Retrieves incremental changes since timestamp in path'
@@ -3178,7 +3227,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /settings/{identifier}:
+  /v3/settings/{identifier}:
     get:
       operationId: settingsDocument_read
       summary: 'READ: Retrieves a single document from the collection'
@@ -3578,9 +3627,9 @@ paths:
                 required:
                   - status
                 x-cadl-name: StatusResponse<422>
-  /status:
+  /v3/status:
     get:
-      operationId: getStatus
+      operationId: v3_getStatus
       parameters: []
       responses:
         '200':
@@ -3611,7 +3660,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnauthorizedFailedResponse'
-  /treatment:
+  /v3/treatment:
     post:
       operationId: treatmentDocument_create
       summary: 'CREATE: Inserts a new document into the collection'
@@ -3789,7 +3838,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NotAcceptableFailedResponse'
-  /treatment/history:
+  /v3/treatment/history:
     get:
       operationId: treatmentDocument_getCollectionHistory
       summary: 'HISTORY: Retrieves incremental changes since dateTime in header'
@@ -3863,7 +3912,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /treatment/history/{lastModified}}:
+  /v3/treatment/history/{lastModified}}:
     get:
       operationId: treatmentDocument_history2
       summary: 'HISTORY: Retrieves incremental changes since timestamp in path'
@@ -3911,7 +3960,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /treatment/{identifier}:
+  /v3/treatment/{identifier}:
     get:
       operationId: treatmentDocument_read
       summary: 'READ: Retrieves a single document from the collection'
@@ -4311,9 +4360,9 @@ paths:
                 required:
                   - status
                 x-cadl-name: StatusResponse<422>
-  /version:
+  /v3/version:
     get:
-      operationId: getVersion
+      operationId: v3_getVersion
       parameters: []
       responses:
         '200':
@@ -4344,9 +4393,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnauthorizedFailedResponse'
-security:
-  - AccessToken: []
-  - JwtToken: []
 components:
   schemas:
     ApiPermissions:
@@ -4663,6 +4709,65 @@ components:
         - some_property
       allOf:
         - $ref: '#/components/schemas/DocumentBase'
+    Properties:
+      type: object
+      properties:
+        bgnow:
+          $ref: '#/components/schemas/object'
+        delta:
+          $ref: '#/components/schemas/object'
+        buckets:
+          type: array
+          items:
+            $ref: '#/components/schemas/object'
+          x-cadl-name: object[]
+        direction:
+          $ref: '#/components/schemas/object'
+        upbat:
+          $ref: '#/components/schemas/object'
+        iob:
+          $ref: '#/components/schemas/object'
+        cob:
+          $ref: '#/components/schemas/object'
+        pump:
+          $ref: '#/components/schemas/object'
+        loop:
+          $ref: '#/components/schemas/object'
+        bwp:
+          $ref: '#/components/schemas/object'
+        cage:
+          $ref: '#/components/schemas/object'
+        sage:
+          $ref: '#/components/schemas/object'
+        basal:
+          $ref: '#/components/schemas/object'
+        dbsize:
+          $ref: '#/components/schemas/object'
+        runtimestate:
+          $ref: '#/components/schemas/RuntimeState'
+      required:
+        - bgnow
+        - delta
+        - buckets
+        - direction
+        - upbat
+        - iob
+        - cob
+        - pump
+        - loop
+        - bwp
+        - cage
+        - sage
+        - basal
+        - dbsize
+        - runtimestate
+    RuntimeState:
+      type: object
+      properties:
+        state:
+          type: string
+      required:
+        - state
     Settings:
       type: object
       properties:
@@ -4832,6 +4937,9 @@ components:
         - status
         - identifier
         - lastModified
+    object:
+      type: object
+      properties: {}
     updatedDocument:
       type: object
       properties:
@@ -4847,15 +4955,7 @@ components:
       required:
         - status
         - identifier
-  securitySchemes:
-    AccessToken:
-      type: apiKey
-      in: query
-      name: token
-    JwtToken:
-      type: http
-      scheme: bearer
 servers:
-  - url: /api/v3
+  - url: /api
     description: default endpoint
     variables: {}
