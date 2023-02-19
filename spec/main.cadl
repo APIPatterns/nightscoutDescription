@@ -24,10 +24,10 @@ namespace nightscout {
     @route("v2")
     namespace v2 {
         @route("properties")
-        op getProperties(): OkResult<Properties>;
+        op getProperties(): Properties;
 
         @route("properties/{properties}")
-        op getSelectedProperties(@path properties: string[]): OkResult<Properties>;
+        op getSelectedProperties(@path properties: string[]): Properties;
     }
 
     @useAuth(AccessToken | JwtToken)

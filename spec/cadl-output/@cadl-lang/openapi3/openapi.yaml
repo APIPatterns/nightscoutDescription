@@ -55,17 +55,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    format: int32
-                  result:
-                    $ref: '#/components/schemas/Properties'
-                required:
-                  - status
-                  - result
-                x-cadl-name: OkResult<Properties>
+                $ref: '#/components/schemas/Properties'
   /v2/properties/{properties}:
     get:
       operationId: v2_getSelectedProperties
@@ -83,17 +73,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    format: int32
-                  result:
-                    $ref: '#/components/schemas/Properties'
-                required:
-                  - status
-                  - result
-                x-cadl-name: OkResult<Properties>
+                $ref: '#/components/schemas/Properties'
   /v3/devicestatus:
     post:
       operationId: deviceStatusDocument_create
