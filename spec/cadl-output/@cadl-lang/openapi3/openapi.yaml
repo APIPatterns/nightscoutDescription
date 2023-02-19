@@ -326,7 +326,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /v3/devicestatus/history/{lastModified}}:
+  /v3/devicestatus/history/{lastModified}:
     get:
       operationId: deviceStatusDocument_history2
       summary: 'HISTORY: Retrieves incremental changes since timestamp in path'
@@ -1026,7 +1026,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /v3/entries/history/{lastModified}}:
+  /v3/entries/history/{lastModified}:
     get:
       operationId: entryDocument_history2
       summary: 'HISTORY: Retrieves incremental changes since timestamp in path'
@@ -1726,7 +1726,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /v3/food/history/{lastModified}}:
+  /v3/food/history/{lastModified}:
     get:
       operationId: foodDocument_history2
       summary: 'HISTORY: Retrieves incremental changes since timestamp in path'
@@ -2459,7 +2459,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /v3/profile/history/{lastModified}}:
+  /v3/profile/history/{lastModified}:
     get:
       operationId: profileDocument_history2
       summary: 'HISTORY: Retrieves incremental changes since timestamp in path'
@@ -3159,7 +3159,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /v3/settings/history/{lastModified}}:
+  /v3/settings/history/{lastModified}:
     get:
       operationId: settingsDocument_history2
       summary: 'HISTORY: Retrieves incremental changes since timestamp in path'
@@ -3892,7 +3892,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestFailedResponse'
-  /v3/treatments/history/{lastModified}}:
+  /v3/treatments/history/{lastModified}:
     get:
       operationId: treatmentDocument_history2
       summary: 'HISTORY: Retrieves incremental changes since timestamp in path'

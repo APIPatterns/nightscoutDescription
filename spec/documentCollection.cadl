@@ -61,7 +61,7 @@ interface DocumentCollection<T> {
         ): OkCollectionResult<T> | BadRequestFailedResponse;
 
     @summary("HISTORY: Retrieves incremental changes since timestamp in path")
-    @route("/history/{lastModified}}")
+    @route("/history/{lastModified}")
     @get
     op history2(
             @path lastModified: int64;
