@@ -1,0 +1,115 @@
+
+import "./main.cadl";
+
+@@doc(nightscout, """
+    Nightscout API v3 is a component of cgm-remote-monitor project. It aims to provide lightweight, secured and HTTP REST compliant interface for your T1D treatment data exchange.
+
+    API v3 uses these environment variables, among other things&#58;
+    - Security switch (optional, default = `true`)
+    <pre>API3_SECURITY_ENABLE=true</pre>
+    You can turn the whole security mechanism off, e.g. for debugging or development purposes,
+    but this should never be set to false in production.
+    - Maximum limit count of documents retrieved from single query
+      <pre>API3_MAX_LIMIT=1000</pre>
+    - Autopruning of obsolete documents (optional, default is only `DEVICESTATUS`=60)
+      <pre>API3_AUTOPRUNE_DEVICESTATUS=60
+
+      API3_AUTOPRUNE_ENTRIES=365
+
+      API3_AUTOPRUNE_TREATMENTS=120
+      </pre>
+      You can specify for which collections autopruning will be activated and length of retention period in days, e.g. "Hold 60 days of devicestatus, automatically delete older documents, hold 365 days of treatments and entries, automatically delete older documents."
+
+
+    - Fallback deduplication switch (optional, default = true)
+      <pre>API3_DEDUP_FALLBACK_ENABLED=true</pre>
+      API3 uses the `identifier` field for document identification and mutual distinction within a single collection. There is automatic deduplication implemented matching the equal `identifier` field. E.g. `CREATE` operation for document having the same `identifier` as another one existing in the database is automatically transformed into `UPDATE` operation of the document found in the database.
+
+      Documents not created via API v3 usually does not have any `identifier` field, but we would like to have some form of deduplication for them, too. This fallback deduplication is turned on by having set `API3_DEDUP_FALLBACK_ENABLED` to `true`.
+      When searching the collection in database, the document is found to be a duplicate only when either he has equal `identifier` or he has no `identifier` and meets&#58;
+      <pre>`devicestatus` collection&#58; equal combination of `created_at` and `device`
+
+      `entries` collection&#58;      equal combination of `date` and `type`
+
+      `food` collection&#58;         equal `created_at`
+
+      `profile` collection&#58;      equal `created_at`
+
+      `treatments` collection&#58;   equal combination of `created_at` and `eventType`
+      </pre>
+
+
+    - Fallback switch for adding `created_at` field along the `date` field (optional, default = true)
+      <pre>API3_CREATED_AT_FALLBACK_ENABLED=true</pre>
+      Standard APIv3 document model uses only `date` field for storing a timestamp of the event recorded by the document. But there is a fallback option to fill `created_at` field as well automatically on each insert/update, just to keep all older components working.
+
+""") 
+
+@@doc(DocumentCollection.search, """
+General search operation through documents of one collection, matching the specified filtering criteria. You can apply&#58;
+        1) filtering - combining any number of filtering parameters
+        2) ordering - using `sort` or `sort$desc` parameter
+        3) paging - using `limit` and `skip` parameters
+
+        If successful, HTTP 200 code is returned with JSON array of matching documents as a response content (it may be empty).
+        This operation requires `read` permission for the API and the collection (e.g. `*:*:read`, `api:*:read`, `*:treatments:read`, `api:treatments:read`).
+        The only exception is the `settings` collection which requires `admin` permission (`api:settings:admin`), because the settings of each application should be isolated and kept secret. You need to know the concrete identifier to access the app's settings.
+""")
+
+@@doc(DocumentCollection.create, """
+Using this operation you can insert new documents into collection. Normally the operation ends with 201 HTTP status code, `Last-Modified` and `Location` headers specified.
+`identifier` is included in response body or it can be parsed from the `Location` response header.
+When the document to post is marked as a duplicate (using rules described at `API3_DEDUP_FALLBACK_ENABLED` switch), the update operation takes place instead of inserting. In this case the original document in the collection is found and it gets updated by the actual operation POST body. Finally the operation ends with 200 HTTP status code along with `Last-Modified` and correct `Location` headers. The response body then includes `isDeduplication`=`true` and `deduplicatedIdentifier` fields.
+This operation provides autopruning of the collection (if autopruning is enabled).
+This operation requires `create` (and/or `update` for deduplication) permission for the API and the collection (e.g. `api:treatments:create` and `api:treatments:update`)
+""");
+
+@@doc(DocumentCollection.read, """
+Basically this operation looks for a document matching the `identifier` field returning 200 or 404 HTTP status code.
+
+If the document has been found in the collection but it had already been deleted, 410 HTTP status code is to be returned.
+
+When `If-Modified-Since` header is used and its value is greater than the timestamp of the document in the collection, 304 HTTP status code with empty response content is returned. It means that the document has not been modified on server since the last retrieval to client side.
+With `If-Modified-Since` header and less or equal timestamp `srvModified` a normal 200 HTTP status with full response is returned.
+
+This operation requires `read` permission for the API and the collection (e.g. `api:treatments:read`)
+""");
+
+@@doc(DocumentCollection.update, """
+Normally the document with the matching `identifier` will be replaced in the collection by the whole JSON request body and 200 HTTP status code will be returned.
+If the document has been found in the collection but it had already been deleted, 410 HTTP status code is to be returned.
+When no document with `identifier` has been found in the collection, then an insert operation takes place instead of updating. Finally 201 HTTP status code is returned with only `Last-Modified` header (`identifier` is already known from the path parameter).
+You can also specify `If-Unmodified-Since` request header including your timestamp of document's last modification. If the document has been modified by somebody else on the server afterwards (and you do not know about it), the 412 HTTP status code is returned cancelling the update operation. You can use this feature to prevent race condition problems.
+This operation provides autopruning of the collection (if autopruning is enabled).
+
+This operation requires `update` (and/or `create`) permission for the API and the collection (e.g. `api:treatments:update` and `api:treatments:create`)
+
+""");
+
+@@doc(DocumentCollection.patch, """
+Normally the document with the matching `identifier` will be retrieved from the collection and it will be patched by all specified fields from the JSON request body. Finally 200 HTTP status code will be returned.
+If the document has been found in the collection but it had already been deleted, 410 HTTP status code is to be returned.
+When no document with `identifier` has been found in the collection, then the operation ends with 404 HTTP status code.
+You can also specify `If-Unmodified-Since` request header including your timestamp of document's last modification. If the document has been modified by somebody else on the server afterwards (and you do not know about it), the 412 HTTP status code is returned cancelling the update operation. You can use this feature to prevent race condition problems.
+`PATCH` operation can save some bandwidth for incremental document updates in comparison with `GET` - `UPDATE` operation sequence.
+While patching the document, the field `modifiedBy` is automatically set to the authorized subject's name.
+This operation provides autopruning of the collection (if autopruning is enabled).
+This operation requires `update` permission for the API and the collection (e.g. `api:treatments:update`)
+""");
+
+@@doc(DocumentCollection.delete, """
+If the document has already been deleted, the operation will succeed anyway. Normally, documents are not really deleted from the collection but they are only marked as deleted. For special cases the deletion can be irreversible using `permanent` parameter.
+This operation provides autopruning of the collection (if autopruning is enabled).
+This operation requires `delete` permission for the API and the collection (e.g. `api:treatments:delete`)
+""");
+
+@@doc(DocumentCollection.getCollectionHistory, """
+HISTORY operation is intended for continuous data synchronization with other systems.
+
+Every insertion, update and deletion will be included in the resulting JSON array of documents (since timestamp in `Last-Modified` request header value). All changes are listed chronologically in response with 200 HTTP status code. The maximum listed `srvModified` timestamp is also stored in `Last-Modified` and `ETag` response headers that you can use for future, directly following synchronization. You can also limit the array's length using `limit` parameter.
+Deleted documents will appear with `isValid` = `false` field.
+HISTORY operation has a fallback mechanism in place for documents, which were not created by API v3. For such documents `srvModified` is virtually assigned from the `date` field (for `entries` collection) or from the `created_at` field (for other collections).
+This operation requires `read` permission for the API and the collection (e.g. `api:treatments:read`)
+The only exception is the `settings` collection which requires `admin` permission (`api:settings:admin`), because the settings of each application should be isolated and kept secret. You need to know the concrete identifier to access the app's settings.
+
+""");

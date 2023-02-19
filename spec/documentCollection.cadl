@@ -1,0 +1,71 @@
+import "@cadl-lang/rest";
+using Cadl.Http;
+
+interface DocumentCollection<T> {
+
+    @summary("CREATE: Inserts a new document into the collection")
+    @post
+    op create(@body body:T ): createdDocument | updatedDocument | BadRequestFailedResponse | UnauthenticatedFailedResponse | UnauthorizedFailedResponse| NotFoundFailedResponse | NotAcceptableFailedResponse;
+
+    @summary("SEARCH: Search documents from the collection")
+    @get
+    op search (
+        @query filter_parameters: string;
+        @query sort: string;
+        @query "sort$desc": string;
+        @query limit: int32;
+        @query skip: int32;
+        @query fields: string;
+    ): OkCollectionResult<T> | BadRequestFailedResponse | UnauthenticatedFailedResponse | UnauthorizedFailedResponse| NotFoundFailedResponse | NotAcceptableFailedResponse;
+
+    @summary("READ: Retrieves a single document from the collection")
+    @route("{identifier}")
+    @get
+    op read(
+            @header("If-Modified-Since") ifModifiedSince: string;
+            @path identifier: string,
+            @query fields: string;
+        ): OkResult<T> | NotModifiedResponse | BadRequestFailedResponse |  UnauthenticatedFailedResponse | NotFoundFailedResponse | NotAcceptableFailedResponse | GoneFailedResponse; 
+
+    @summary("UPDATE: Updates a document in the collection")
+    @route("{identifier}")
+    @put 
+    op update(
+            @header("If-Modified-Since") ifModifiedSince: string;
+            @path identifier: string,
+        ): createdDocument | updatedDocument | BadRequestFailedResponse | UnauthenticatedFailedResponse | UnauthorizedFailedResponse | NotFoundFailedResponse | GoneFailedResponse | StatusResponse<412> | StatusResponse<422>; 
+
+    @summary("PATCH: Partially updates document in the collection")
+    @route("{identifier}")
+    @patch 
+    op patch(
+            @header("If-Modified-Since") ifModifiedSince: string;
+            @path identifier: string,
+        ): createdDocument | updatedDocument | BadRequestFailedResponse | UnauthenticatedFailedResponse | UnauthorizedFailedResponse | NotFoundFailedResponse | GoneFailedResponse | StatusResponse<412> | StatusResponse<422>; 
+
+    @summary("DELETE: Deletes a document from the collection")
+    @route("{identifier}")
+    @delete 
+    op delete(
+            @query permanent: boolean;
+            @path identifier: string,
+        ): OkResult<200> | UnauthenticatedFailedResponse | UnauthorizedFailedResponse | NotFoundFailedResponse  | StatusResponse<422>;       
+
+    @summary("HISTORY: Retrieves incremental changes since dateTime in header")
+    @route("/history")
+    @get
+    op getCollectionHistory(
+            @header("Last-Modified") lastModified: string;
+            @query limit: int32;
+            @query fields: string;
+        ): OkCollectionResult<T> | BadRequestFailedResponse;
+
+    @summary("HISTORY: Retrieves incremental changes since timestamp in path")
+    @route("/history/{lastModified}}")
+    @get
+    op history2(
+            @path lastModified: int64;
+            @query limit: int32;
+            @query fields: string;
+        ): OkCollectionResult<T> | BadRequestFailedResponse;
+}

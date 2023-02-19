@@ -1,95 +1,52 @@
-/*
-    Food:
-      description: Nutritional values of food
-      allOf:
-        - $ref: '#/components/schemas/DocumentBase'
-        - type: object
-          properties:
+import "./DocumentBase.cadl";
 
-            food:
-              type: string
-              description: 'food, quickpick'
-
-            category:
-              type: string
-              description: Name for a group of related records
-
-            subcategory:
-              type: string
-              description: Name for a second level of groupping
-
-            name:
-              type: string
-              description: Name of the food described
-
-            portion:
-              type: number
-              description: Number of units (e.g. grams) of the whole portion described
-
-            unit:
-              type: string
-              example: '"g", "ml", "oz"'
-              description: Unit for the portion
-
-            carbs:
-              type: number
-              description: Amount of carbs in the portion in grams
-
-            fat:
-              type: number
-              description: Amount of fat in the portion in grams
-
-            protein:
-              type: number
-              description: Amount of proteins in the portion in grams
-
-            energy:
-              type: number
-              description: Amount of energy in the portion in kJ
-
-            gi:
-              type: number
-              description: 'Glycemic index (1=low, 2=medium, 3=high)'
-
-            hideafteruse:
-              type: boolean
-              description: Flag used for quickpick
-
-            hidden:
-              type: boolean
-              description: Flag used for quickpick
-
-            position:
-              type: number
-              description: Ordering field for quickpick
-
-            portions:
-              type: number
-              description: component multiplier if defined inside quickpick compound
-
-            foods:
-              type: array
-              description: Neighbour documents (from food collection) that together make a quickpick compound
-              items:
-                $ref: '#/components/schemas/Food'
-
-*/
-
+@doc("Nutritional values of food")
 model Food extends DocumentBase {
+  @doc("food, quickpick")
   food?: string;
+
+  @doc("Name for a group of related records")
   category?: string;
+
+  @doc("Name for a second level of groupping")
   subcategory?: string;
+
+  @doc("Name of the food described")
   name?: string;
+
+  @doc("Number of units (e.g. grams) of the whole portion described")
   portion?: float32;
+
+  @doc("g, ml, oz")
   unit?: string;
+
+  @doc("Amount of carbs in the portion in grams")
   carbs?: float32;
+
+  @doc("Amount of fat in the portion in grams")
   fat?: float32;
+
+  @doc("Amount of proteins in the portion in grams")
   protein?: float32;
+
+  @doc("Amount of energy in the portion in kJ")
   energy?: float32;
+
+  @doc("Glycemic index (1=low, 2=medium, 3=high)")
   gi?: float32;
+
+  @doc("Flag used for quickpick")
   hideafteruse?: boolean;
+
+  @doc("Flag used for quickpick")
   hidden?: boolean;
+
+  @doc("Ordering field for quickpick")
   position?: float32;
+
+  @doc("component multiplier if defined inside quickpick compound")
   portions?: float32;
+
+  // @doc("Neighbour documents (from food collection) that together make a quickpick compound")
   // foods?: [Food]  // Removed temporarily to avoid circular dependency
 }

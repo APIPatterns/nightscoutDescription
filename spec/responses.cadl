@@ -1,0 +1,35 @@
+import "@cadl-lang/rest";
+using Cadl.Http;
+
+// Every responses has a JSON object with a status property in it
+model StatusResponse<Status> {
+    @statusCode statusCode: Status;    
+    status: int32;
+}
+
+model OkResult<T> is StatusResponse<200> {
+    result: T;
+}
+
+model OkCollectionResult<T> is StatusResponse<200> {
+    result: T[];
+}
+
+model createdDocument is StatusResponse<201> {
+    @header("Location") location: string;
+    identifier: string; 
+    lastModified: int64;
+}
+
+model updatedDocument is StatusResponse<200> {
+    identifier: string; 
+    isDeduplication?: boolean;
+    deduplicatedIdentifier?: string;
+}
+
+model BadRequestFailedResponse is StatusResponse<400>;
+model UnauthenticatedFailedResponse is StatusResponse<401>;
+model UnauthorizedFailedResponse is StatusResponse<403>;
+model NotFoundFailedResponse is StatusResponse<404>;
+model NotAcceptableFailedResponse is StatusResponse<406>;
+model GoneFailedResponse is StatusResponse<410>;

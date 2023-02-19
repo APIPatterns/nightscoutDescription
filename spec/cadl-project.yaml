@@ -1,2 +1,4 @@
 emit:
   - '@cadl-lang/openapi3'
+imports:
+  - './docs.cadl'

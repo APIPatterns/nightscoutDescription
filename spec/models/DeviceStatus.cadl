@@ -1,18 +1,6 @@
 import "./DocumentBase.cadl";
 
-/*
-    DeviceStatus:
-      description: State of physical device, which is a technical part of the whole T1D compensation system
-      allOf:
-        - $ref: '#/components/schemas/DocumentBase'
-        - type: object
-          properties:
-            some_property:
-              type: string
-              description: ...
-
-*/
-
+@doc("State of physical device, which is a technical part of the whole T1D compensation system" )
 model DeviceStatus extends DocumentBase {
   some_property: string;
 }

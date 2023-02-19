@@ -2,73 +2,84 @@
 import "@cadl-lang/rest";
 
 model DocumentBase {
-/*    
-*  Main addressing, required field that identifies document in the collection. 
-*  The client should not create the identifier, the server automatically assigns it when the document is inserted.
-*  The server calculates the identifier in such a way that duplicate records are automatically merged (deduplicating is made by `date`, `device` and `eventType` fields).
-*  The best practise for all applications is not to loose identifiers from received documents, but save them carefully for other consumer applications/systems.
-*  API v3 has a fallback mechanism in place, for documents without `identifier` field the `identifier` is set to internal `_id`, when reading or addressing these documents.
-*  Note&#58; this field is immutable by the client (it cannot be updated or patched)
-*/
+    @doc("""    
+        Main addressing, required field that identifies document in the collection. 
+        The client should not create the identifier, the server automatically assigns it when the document is inserted.
+        The server calculates the identifier in such a way that duplicate records are automatically merged (deduplicating is made by `date`, `device` and `eventType` fields).
+        The best practise for all applications is not to loose identifiers from received documents, but save them carefully for other consumer applications/systems.
+        API v3 has a fallback mechanism in place, for documents without `identifier` field the `identifier` is set to internal `_id`, when reading or addressing these documents.
+        Note&#58; this field is immutable by the client (it cannot be updated or patched)
+    """)
     identifier: string;
-/*
-* Required timestamp when the record or event occured, you can choose from three input formats
-* - Unix epoch in milliseconds (1525383610088)
-* - Unix epoch in seconds (1525383610)
-* - ISO 8601 with optional timezone ('2018-05-03T21:40:10.088Z' or '2018-05-03T23:40:10.088+02:00')
-* The date is always stored in a normalized form - UTC with zero offset. If UTC offset was present, it is going to be set in the `utcOffset` field.
-* Note&#58; this field is immutable by the client (it cannot be updated or patched)
-*/
+
+    @doc("""
+        Required timestamp when the record or event occured, you can choose from three input formats
+        - Unix epoch in milliseconds (1525383610088)
+        - Unix epoch in seconds (1525383610)
+        - ISO 8601 with optional timezone ('2018-05-03T21:40:10.088Z' or '2018-05-03T23:40:10.088+02:00')
+        The date is always stored in a normalized form - UTC with zero offset. If UTC offset was present, it is going to be set in the `utcOffset` field.
+        Note&#58; this field is immutable by the client (it cannot be updated or patched)
+    """)
     date: int64;
-/*
-* Local UTC offset (timezone) of the event in minutes. This field can be set either directly by the client (in the incoming document) or it is automatically parsed from the `date` field.
-* Note&#58; this field is immutable by the client (it cannot be updated or patched)
-*/
+
+    @doc("""
+        Local UTC offset (timezone) of the event in minutes. This field can be set either directly by the client (in the incoming document) or it is automatically parsed from the `date` field.
+        Note&#58; this field is immutable by the client (it cannot be updated or patched)
+    """)
     utcOffset?: int32;
-/*
-* Application or system in which the record was entered by human or device for the first time.
-* Note&#58; this field is immutable by the client (it cannot be updated or patched)
-*/
+
+    @doc("""
+        Application or system in which the record was entered by human or device for the first time.
+        Note&#58; this field is immutable by the client (it cannot be updated or patched)
+    """)
     app: string;
-/*
-* The device from which the data originated (including serial number of the device, if it is relevant and safe).
-* Note&#58; this field is immutable by the client (it cannot be updated or patched)
-*/
+
+    @doc("""
+        The device from which the data originated (including serial number of the device, if it is relevant and safe).
+        Note&#58; this field is immutable by the client (it cannot be updated or patched)
+    """)
     device?: string;
-/*
-* Internally assigned database id. This field is for internal server purposes only, clients communicate with API by using identifier field.
-*/
+
+    @doc("""
+        Internally assigned database id. This field is for internal server purposes only, clients communicate with API by using identifier field.
+    """)
     _id: string;
-/*
-* The server's timestamp of document insertion into the database (Unix epoch in ms). This field appears only for documents which were inserted by API v3.
-* Note&#58; this field is immutable by the client (it cannot be updated or patched)
-*/
+
+    @doc("""
+        The server's timestamp of document insertion into the database (Unix epoch in ms). This field appears only for documents which were inserted by API v3.
+        Note&#58; this field is immutable by the client (it cannot be updated or patched)
+    """)
     srvCreated?: int64;
-/*
-* Name of the security subject (within Nightscout scope) which has created the document. This field is automatically set by the server from the passed token or JWT.
-* Note&#58; this field is immutable by the client (it cannot be updated or patched)
-*/
+
+    @doc("""
+        Name of the security subject (within Nightscout scope) which has created the document. This field is automatically set by the server from the passed token or JWT.
+        Note&#58; this field is immutable by the client (it cannot be updated or patched)
+    """)
     subject?: string;
-/*
-* The server's timestamp of the last document modification in the database (Unix epoch in ms). This field appears  only for documents which were somehow modified by API v3 (inserted, updated or deleted).
-* Note&#58; this field is immutable by the client (it cannot be updated or patched)
-*/
+
+    @doc("""
+        The server's timestamp of the last document modification in the database (Unix epoch in ms). This field appears  only for documents which were somehow modified by API v3 (inserted, updated or deleted).
+        Note&#58; this field is immutable by the client (it cannot be updated or patched)
+    """)
     srvModified?: int64;
-/*
-* Name of the security subject (within Nightscout scope) which has patched or deleted the document for the last time. This field is automatically set by the server.
-* Note&#58; this field is immutable by the client (it cannot be updated or patched)
-*/
+
+    @doc("""
+        Name of the security subject (within Nightscout scope) which has patched or deleted the document for the last time. This field is automatically set by the server.
+        Note&#58; this field is immutable by the client (it cannot be updated or patched)
+    """)
     modifiedBy?: string;
-/*
-* A flag set by the server only for deleted documents. This field appears
-* only within history operation and for documents which were deleted by API v3 (and they always have a false value)
-* Note&#58; this field is immutable by the client (it cannot be updated or patched)
-*/
+
+    @doc("""
+        A flag set by the server only for deleted documents. This field appears
+        only within history operation and for documents which were deleted by API v3 (and they always have a false value)
+        Note&#58; this field is immutable by the client (it cannot be updated or patched)
+    """)
     isValid?: boolean;
-/*
-* A flag set by client that locks the document from any changes. Every document marked with `isReadOnly=true` is forever immutable and cannot even be deleted.
-* Any attempt to modify the read-only document will end with status 422 UNPROCESSABLE ENTITY.
-*/
+
+    @doc("""
+        A flag set by client that locks the document from any changes. Every document marked with `isReadOnly=true` is forever immutable and cannot even be deleted.
+        Any attempt to modify the read-only document will end with status 422 UNPROCESSABLE ENTITY.
+    """)
     isReadOnly?: boolean;
 }
 
