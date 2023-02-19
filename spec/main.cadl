@@ -1,0 +1,139 @@
+import "@cadl-lang/rest";
+import "@cadl-lang/openapi3";
+
+import "./models/DeviceStatus.cadl";
+import "./models/Entry.cadl";
+import "./models/Food.cadl";
+import "./models/Treatment.cadl";
+import "./models/Profile.cadl";
+import "./models/Settings.cadl";
+import "./models/Other.cadl";
+
+using Cadl.Http;
+
+
+@service({
+    title: "Nightscout API",
+    version: "3.0.3"
+})
+@useAuth(AccessToken | JwtToken)
+
+@server("/api/v3","default endpoint")
+namespace nightscout {
+
+    @route("devicestatus")
+    interface deviceStatusDocument extends DocumentCollection<DeviceStatus> {}
+
+    @route("entries")
+    interface entryDocument extends DocumentCollection<Entry> {}
+
+    @route("food")
+    interface foodDocument extends DocumentCollection<Food> {}
+
+    @route("treatment")
+    interface treatmentDocument extends DocumentCollection<Treatment> {}
+
+    @route("profile")
+    interface profileDocument extends DocumentCollection<Profile> {}
+
+    @route("settings")
+    interface settingsDocument extends DocumentCollection<Settings> {}
+
+    @route("version")
+    op getVersion(): OkResult<VersionResult>;
+
+    @route("status")
+    op getStatus(): OkResult<StatusResult>;
+
+    @route("lastmodified")
+    op getLastModified(): OkResult<LastModifiedResult>;
+}
+
+interface DocumentCollection<T> {
+
+    @post
+    op createDocument(@body body:T ): createdDocument | updatedDocument | BadRequestFailedResponse | UnauthenticatedFailedResponse | UnauthorizedFailedResponse| NotFoundFailedResponse | NotAcceptableFailedResponse;
+
+    @get
+    op getDocuments(
+        @query filter_parameters: string;
+        @query sort: string;
+        @query "sort$desc": string;
+        @query limit: int32;
+        @query skip: int32;
+        @query fields: string;
+    ): OkCollectionResult<T> | BadRequestFailedResponse | UnauthenticatedFailedResponse | UnauthorizedFailedResponse| NotFoundFailedResponse | NotAcceptableFailedResponse;
+
+    @route("{identifier}")
+    @get
+    op getDocument(
+            @header("If-Modified-Since") ifModifiedSince: string;
+            @path identifier: string,
+            @query fields: string;
+        ): OkResult<T> | NotModifiedResponse | BadRequestFailedResponse |  UnauthenticatedFailedResponse | NotFoundFailedResponse | NotAcceptableFailedResponse | GoneFailedResponse; 
+
+    @route("{identifier}")
+    @put 
+    op putDocument(
+            @header("If-Modified-Since") ifModifiedSince: string;
+            @path identifier: string,
+        ): createdDocument | updatedDocument | BadRequestFailedResponse | UnauthenticatedFailedResponse | UnauthorizedFailedResponse | NotFoundFailedResponse | GoneFailedResponse | StatusResponse<412> | StatusResponse<422>; 
+
+    @route("{identifier}")
+    @patch 
+    op patchDocument(
+            @header("If-Modified-Since") ifModifiedSince: string;
+            @path identifier: string,
+        ): createdDocument | updatedDocument | BadRequestFailedResponse | UnauthenticatedFailedResponse | UnauthorizedFailedResponse | NotFoundFailedResponse | GoneFailedResponse | StatusResponse<412> | StatusResponse<422>; 
+    
+    @route("{identifier}")
+    @delete 
+    op deleteDocument(
+            @query permanent: boolean;
+            @path identifier: string,
+        ): OkResult<200> | UnauthenticatedFailedResponse | UnauthorizedFailedResponse | NotFoundFailedResponse  | StatusResponse<422>;       
+
+    @route("/history")
+    op getCollectionHistory(
+            @header("Last-Modified-Since") lastModified: string;
+            @path id: string,
+            @query limit: int32;
+            @query fields: string;
+        ): OkCollectionResult<T> | BadRequestFailedResponse;
+}
+
+// Every responses has a JSON object with a status property in it
+model StatusResponse<Status> {
+    @statusCode statusCode: Status;    
+    status: int32;
+}
+
+model OkResult<T> is StatusResponse<200> {
+    result: T;
+}
+
+model OkCollectionResult<T> is StatusResponse<200> {
+    result: T[];
+}
+
+model createdDocument is StatusResponse<201> {
+    @header("Location") location: string;
+    identifier: string; 
+    lastModified: int64;
+}
+
+model updatedDocument is StatusResponse<200> {
+    identifier: string; 
+    isDeduplication?: boolean;
+    deduplicatedIdentifier?: string;
+}
+
+model BadRequestFailedResponse is StatusResponse<400>;
+model UnauthenticatedFailedResponse is StatusResponse<401>;
+model UnauthorizedFailedResponse is StatusResponse<403>;
+model NotFoundFailedResponse is StatusResponse<404>;
+model NotAcceptableFailedResponse is StatusResponse<406>;
+model GoneFailedResponse is StatusResponse<410>;
+
+model AccessToken is ApiKeyAuth<ApiKeyLocation.query,"token">;
+model JwtToken is BearerAuth;

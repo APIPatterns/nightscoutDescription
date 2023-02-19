@@ -1,0 +1,51 @@
+
+model StatusResult {
+    version: VersionResult;
+    apiPermissions: ApiPermissions;
+}
+
+model ApiPermissions {
+    devicestatus: string;
+    entries: string;
+    food: string;
+    profile: string;
+    treatments: string;
+}
+
+
+model VersionResult {
+    @doc("The whole Nightscout instance version")
+    version: string;
+    @doc("API v3 subsystem version")
+    apiVersion: string;
+    @doc("Actual server date and time in UNIX epoch format")
+    srvDate: int64;
+    @doc("Type of storage engine used")
+    storage: Storage;
+}
+
+model Storage {
+    @doc("Type of storage engine used")
+    type: string;
+    @doc("Version of the storage engine")
+    version: string;
+}
+
+
+model LastModifiedResult {
+    @doc("Actual storage server date (Unix epoch in ms).")
+    srvDate: int64;
+    @doc("Collections which the user have read access to.")
+    collections: LastModdifiedCollections;
+  }
+  
+  model LastModdifiedCollections {
+    @doc("Timestamp of the last modification (Unix epoch in ms), `null` when there is no timestamp found.")
+    devicestatus: int64;
+    @doc("Timestamp of the last modification (Unix epoch in ms), `null` when there is no timestamp found.")
+    treatments: int64;
+    @doc("Timestamp of the last modification (Unix epoch in ms), `null` when there is no timestamp found.")
+    entries: int64;
+    @doc("Timestamp of the last modification (Unix epoch in ms), `null` when there is no timestamp found.")
+    profile: int64;
+  }

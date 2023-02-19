@@ -1,0 +1,95 @@
+/*
+    Food:
+      description: Nutritional values of food
+      allOf:
+        - $ref: '#/components/schemas/DocumentBase'
+        - type: object
+          properties:
+
+            food:
+              type: string
+              description: 'food, quickpick'
+
+            category:
+              type: string
+              description: Name for a group of related records
+
+            subcategory:
+              type: string
+              description: Name for a second level of groupping
+
+            name:
+              type: string
+              description: Name of the food described
+
+            portion:
+              type: number
+              description: Number of units (e.g. grams) of the whole portion described
+
+            unit:
+              type: string
+              example: '"g", "ml", "oz"'
+              description: Unit for the portion
+
+            carbs:
+              type: number
+              description: Amount of carbs in the portion in grams
+
+            fat:
+              type: number
+              description: Amount of fat in the portion in grams
+
+            protein:
+              type: number
+              description: Amount of proteins in the portion in grams
+
+            energy:
+              type: number
+              description: Amount of energy in the portion in kJ
+
+            gi:
+              type: number
+              description: 'Glycemic index (1=low, 2=medium, 3=high)'
+
+            hideafteruse:
+              type: boolean
+              description: Flag used for quickpick
+
+            hidden:
+              type: boolean
+              description: Flag used for quickpick
+
+            position:
+              type: number
+              description: Ordering field for quickpick
+
+            portions:
+              type: number
+              description: component multiplier if defined inside quickpick compound
+
+            foods:
+              type: array
+              description: Neighbour documents (from food collection) that together make a quickpick compound
+              items:
+                $ref: '#/components/schemas/Food'
+
+*/
+
+model Food extends DocumentBase {
+  food?: string;
+  category?: string;
+  subcategory?: string;
+  name?: string;
+  portion?: float32;
+  unit?: string;
+  carbs?: float32;
+  fat?: float32;
+  protein?: float32;
+  energy?: float32;
+  gi?: float32;
+  hideafteruse?: boolean;
+  hidden?: boolean;
+  position?: float32;
+  portions?: float32;
+  foods?: [Food]
+}

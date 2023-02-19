@@ -1,0 +1,20 @@
+/*
+    Profile:
+      description: Parameters describing body functioning relative to T1D + compensation parameters
+      allOf:
+        - $ref: '#/components/schemas/DocumentBase'
+        - type: object
+          properties:
+            some_property:
+              type: string
+              description: ...
+
+
+*/
+
+import "./DocumentBase.cadl";
+
+model Profile  extends DocumentBase {
+  some_property: string;
+}
+

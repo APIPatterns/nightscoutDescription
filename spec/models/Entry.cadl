@@ -1,0 +1,57 @@
+/*
+    Entry:
+      description: Blood glucose measurements and CGM calibrations
+      allOf:
+        - $ref: '#/components/schemas/DocumentBase'
+        - type: object
+          properties:
+
+            type:
+              type: string
+              description: 'sgv, mbg, cal, etc'
+
+            sgv:
+              type: number
+              description: The glucose reading. (only available for sgv types)
+
+            direction:
+              type: string
+              description: Direction of glucose trend reported by CGM. (only available for sgv types)
+              example: '"DoubleDown", "SingleDown", "FortyFiveDown", "Flat", "FortyFiveUp", "SingleUp", "DoubleUp", "NOT COMPUTABLE", "RATE OUT OF RANGE" for xdrip'
+
+            noise:
+              type: number
+              description: Noise level at time of reading. (only available for sgv types)
+              example: 'xdrip: 0, 1, 2=high, 3=high_for_predict, 4=very high, 5=extreme'
+
+            filtered:
+              type: number
+              description: The raw filtered value directly from CGM transmitter. (only available for sgv types)
+
+            unfiltered:
+              type: number
+              description: The raw unfiltered value directly from CGM transmitter. (only available for sgv types)
+
+            rssi:
+              type: number
+              description: The signal strength from CGM transmitter. (only available for sgv types)
+
+            units:
+              type: string
+              example: '"mg", "mmol"'
+              description: The units for the glucose value, mg/dl or mmol/l. It is strongly recommended to fill in this field.
+
+*/
+
+import "./DocumentBase.cadl";
+
+model Entry extends DocumentBase {
+    type?: string;
+    sgv?: int32;
+    direction?: string;
+    noise?: int32;
+    filtered?: int32;
+    unfiltered?: int32;
+    rssi?: int32;
+    units?: string;
+}

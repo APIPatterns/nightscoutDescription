@@ -1,0 +1,3504 @@
+openapi: 3.0.0
+info:
+  title: Nightscout API
+  version: 3.0.3
+tags: []
+paths:
+  /devicestatus:
+    post:
+      operationId: deviceStatusDocument_createDocument
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceStatus'
+    get:
+      operationId: deviceStatusDocument_getDocuments
+      parameters:
+        - name: filter_parameters
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: sort$desc
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: skip
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeviceStatus'
+                    x-cadl-name: DeviceStatus[]
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkCollectionResult<DeviceStatus>
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+  /devicestatus/history/{id}:
+    get:
+      operationId: deviceStatusDocument_getCollectionHistory
+      parameters:
+        - name: Last-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeviceStatus'
+                    x-cadl-name: DeviceStatus[]
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkCollectionResult<DeviceStatus>
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+  /devicestatus/{identifier}:
+    get:
+      operationId: deviceStatusDocument_getDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    $ref: '#/components/schemas/DeviceStatus'
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkResult<DeviceStatus>
+        '304':
+          description: >-
+            The client has made a conditional request and the resource has not
+            been modified.
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+    put:
+      operationId: deviceStatusDocument_putDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+        '412':
+          description: Precondition failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<412>
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+    patch:
+      operationId: deviceStatusDocument_patchDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+        '412':
+          description: Precondition failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<412>
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+    delete:
+      operationId: deviceStatusDocument_deleteDocument
+      parameters:
+        - name: permanent
+          in: query
+          required: true
+          schema:
+            type: boolean
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: number
+                    enum:
+                      - 200
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkResult<200>
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+  /entries:
+    post:
+      operationId: entryDocument_createDocument
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Entry'
+    get:
+      operationId: entryDocument_getDocuments
+      parameters:
+        - name: filter_parameters
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: sort$desc
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: skip
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Entry'
+                    x-cadl-name: Entry[]
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkCollectionResult<Entry>
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+  /entries/history/{id}:
+    get:
+      operationId: entryDocument_getCollectionHistory
+      parameters:
+        - name: Last-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Entry'
+                    x-cadl-name: Entry[]
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkCollectionResult<Entry>
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+  /entries/{identifier}:
+    get:
+      operationId: entryDocument_getDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    $ref: '#/components/schemas/Entry'
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkResult<Entry>
+        '304':
+          description: >-
+            The client has made a conditional request and the resource has not
+            been modified.
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+    put:
+      operationId: entryDocument_putDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+        '412':
+          description: Precondition failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<412>
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+    patch:
+      operationId: entryDocument_patchDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+        '412':
+          description: Precondition failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<412>
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+    delete:
+      operationId: entryDocument_deleteDocument
+      parameters:
+        - name: permanent
+          in: query
+          required: true
+          schema:
+            type: boolean
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: number
+                    enum:
+                      - 200
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkResult<200>
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+  /food:
+    post:
+      operationId: foodDocument_createDocument
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Food'
+    get:
+      operationId: foodDocument_getDocuments
+      parameters:
+        - name: filter_parameters
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: sort$desc
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: skip
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Food'
+                    x-cadl-name: Food[]
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkCollectionResult<Food>
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+  /food/history/{id}:
+    get:
+      operationId: foodDocument_getCollectionHistory
+      parameters:
+        - name: Last-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Food'
+                    x-cadl-name: Food[]
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkCollectionResult<Food>
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+  /food/{identifier}:
+    get:
+      operationId: foodDocument_getDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    $ref: '#/components/schemas/Food'
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkResult<Food>
+        '304':
+          description: >-
+            The client has made a conditional request and the resource has not
+            been modified.
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+    put:
+      operationId: foodDocument_putDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+        '412':
+          description: Precondition failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<412>
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+    patch:
+      operationId: foodDocument_patchDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+        '412':
+          description: Precondition failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<412>
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+    delete:
+      operationId: foodDocument_deleteDocument
+      parameters:
+        - name: permanent
+          in: query
+          required: true
+          schema:
+            type: boolean
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: number
+                    enum:
+                      - 200
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkResult<200>
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+  /lastmodified:
+    get:
+      operationId: getLastModified
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    $ref: '#/components/schemas/LastModifiedResult'
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkResult<LastModifiedResult>
+  /profile:
+    post:
+      operationId: profileDocument_createDocument
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Profile'
+    get:
+      operationId: profileDocument_getDocuments
+      parameters:
+        - name: filter_parameters
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: sort$desc
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: skip
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Profile'
+                    x-cadl-name: Profile[]
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkCollectionResult<Profile>
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+  /profile/history/{id}:
+    get:
+      operationId: profileDocument_getCollectionHistory
+      parameters:
+        - name: Last-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Profile'
+                    x-cadl-name: Profile[]
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkCollectionResult<Profile>
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+  /profile/{identifier}:
+    get:
+      operationId: profileDocument_getDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    $ref: '#/components/schemas/Profile'
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkResult<Profile>
+        '304':
+          description: >-
+            The client has made a conditional request and the resource has not
+            been modified.
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+    put:
+      operationId: profileDocument_putDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+        '412':
+          description: Precondition failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<412>
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+    patch:
+      operationId: profileDocument_patchDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+        '412':
+          description: Precondition failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<412>
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+    delete:
+      operationId: profileDocument_deleteDocument
+      parameters:
+        - name: permanent
+          in: query
+          required: true
+          schema:
+            type: boolean
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: number
+                    enum:
+                      - 200
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkResult<200>
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+  /settings:
+    post:
+      operationId: settingsDocument_createDocument
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Settings'
+    get:
+      operationId: settingsDocument_getDocuments
+      parameters:
+        - name: filter_parameters
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: sort$desc
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: skip
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Settings'
+                    x-cadl-name: Settings[]
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkCollectionResult<Settings>
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+  /settings/history/{id}:
+    get:
+      operationId: settingsDocument_getCollectionHistory
+      parameters:
+        - name: Last-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Settings'
+                    x-cadl-name: Settings[]
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkCollectionResult<Settings>
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+  /settings/{identifier}:
+    get:
+      operationId: settingsDocument_getDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    $ref: '#/components/schemas/Settings'
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkResult<Settings>
+        '304':
+          description: >-
+            The client has made a conditional request and the resource has not
+            been modified.
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+    put:
+      operationId: settingsDocument_putDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+        '412':
+          description: Precondition failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<412>
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+    patch:
+      operationId: settingsDocument_patchDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+        '412':
+          description: Precondition failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<412>
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+    delete:
+      operationId: settingsDocument_deleteDocument
+      parameters:
+        - name: permanent
+          in: query
+          required: true
+          schema:
+            type: boolean
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: number
+                    enum:
+                      - 200
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkResult<200>
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+  /status:
+    get:
+      operationId: getStatus
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    $ref: '#/components/schemas/StatusResult'
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkResult<StatusResult>
+  /treatment:
+    post:
+      operationId: treatmentDocument_createDocument
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Treatment'
+    get:
+      operationId: treatmentDocument_getDocuments
+      parameters:
+        - name: filter_parameters
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: sort$desc
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: skip
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Treatment'
+                    x-cadl-name: Treatment[]
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkCollectionResult<Treatment>
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+  /treatment/history/{id}:
+    get:
+      operationId: treatmentDocument_getCollectionHistory
+      parameters:
+        - name: Last-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Treatment'
+                    x-cadl-name: Treatment[]
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkCollectionResult<Treatment>
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+  /treatment/{identifier}:
+    get:
+      operationId: treatmentDocument_getDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    $ref: '#/components/schemas/Treatment'
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkResult<Treatment>
+        '304':
+          description: >-
+            The client has made a conditional request and the resource has not
+            been modified.
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '406':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotAcceptableFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+    put:
+      operationId: treatmentDocument_putDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+        '412':
+          description: Precondition failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<412>
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+    patch:
+      operationId: treatmentDocument_patchDocument
+      parameters:
+        - name: If-Modified-Since
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/updatedDocument'
+        '201':
+          description: >-
+            The request has succeeded and a new resource has been created as a
+            result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createdDocument'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestFailedResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '410':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoneFailedResponse'
+        '412':
+          description: Precondition failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<412>
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+    delete:
+      operationId: treatmentDocument_deleteDocument
+      parameters:
+        - name: permanent
+          in: query
+          required: true
+          schema:
+            type: boolean
+        - name: identifier
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    type: number
+                    enum:
+                      - 200
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkResult<200>
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedFailedResponse'
+        '403':
+          description: Access is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedFailedResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundFailedResponse'
+        '422':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                required:
+                  - status
+                x-cadl-name: StatusResponse<422>
+  /version:
+    get:
+      operationId: getVersion
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int32
+                  result:
+                    $ref: '#/components/schemas/VersionResult'
+                required:
+                  - status
+                  - result
+                x-cadl-name: OkResult<VersionResult>
+security:
+  - AccessToken: []
+  - JwtToken: []
+components:
+  schemas:
+    ApiPermissions:
+      type: object
+      properties:
+        devicestatus:
+          type: string
+        entries:
+          type: string
+        food:
+          type: string
+        profile:
+          type: string
+        treatments:
+          type: string
+      required:
+        - devicestatus
+        - entries
+        - food
+        - profile
+        - treatments
+    BadRequestFailedResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+      required:
+        - status
+    DeviceStatus:
+      type: object
+      properties:
+        some_property:
+          type: string
+      required:
+        - some_property
+      allOf:
+        - $ref: '#/components/schemas/DocumentBase'
+    DocumentBase:
+      type: object
+      properties:
+        identifier:
+          type: string
+        date:
+          type: integer
+          format: int64
+        utcOffset:
+          type: integer
+          format: int32
+        app:
+          type: string
+        device:
+          type: string
+        _id:
+          type: string
+        srvCreated:
+          type: integer
+          format: int64
+        subject:
+          type: string
+        srvModified:
+          type: integer
+          format: int64
+        modifiedBy:
+          type: string
+        isValid:
+          type: boolean
+        isReadOnly:
+          type: boolean
+      required:
+        - identifier
+        - date
+        - app
+        - _id
+    Entry:
+      type: object
+      properties:
+        type:
+          type: string
+        sgv:
+          type: integer
+          format: int32
+        direction:
+          type: string
+        noise:
+          type: integer
+          format: int32
+        filtered:
+          type: integer
+          format: int32
+        unfiltered:
+          type: integer
+          format: int32
+        rssi:
+          type: integer
+          format: int32
+        units:
+          type: string
+      allOf:
+        - $ref: '#/components/schemas/DocumentBase'
+    Food:
+      type: object
+      properties:
+        food:
+          type: string
+        category:
+          type: string
+        subcategory:
+          type: string
+        name:
+          type: string
+        portion:
+          type: number
+          format: float
+        unit:
+          type: string
+        carbs:
+          type: number
+          format: float
+        fat:
+          type: number
+          format: float
+        protein:
+          type: number
+          format: float
+        energy:
+          type: number
+          format: float
+        gi:
+          type: number
+          format: float
+        hideafteruse:
+          type: boolean
+        hidden:
+          type: boolean
+        position:
+          type: number
+          format: float
+        portions:
+          type: number
+          format: float
+        foods:
+          type: array
+          items: {}
+          x-cadl-name: '[Food]'
+      allOf:
+        - $ref: '#/components/schemas/DocumentBase'
+    GoneFailedResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+      required:
+        - status
+    LastModdifiedCollections:
+      type: object
+      properties:
+        devicestatus:
+          type: integer
+          format: int64
+          description: >-
+            Timestamp of the last modification (Unix epoch in ms), `null` when
+            there is no timestamp found.
+        treatments:
+          type: integer
+          format: int64
+          description: >-
+            Timestamp of the last modification (Unix epoch in ms), `null` when
+            there is no timestamp found.
+        entries:
+          type: integer
+          format: int64
+          description: >-
+            Timestamp of the last modification (Unix epoch in ms), `null` when
+            there is no timestamp found.
+        profile:
+          type: integer
+          format: int64
+          description: >-
+            Timestamp of the last modification (Unix epoch in ms), `null` when
+            there is no timestamp found.
+      required:
+        - devicestatus
+        - treatments
+        - entries
+        - profile
+    LastModifiedResult:
+      type: object
+      properties:
+        srvDate:
+          type: integer
+          format: int64
+          description: Actual storage server date (Unix epoch in ms).
+        collections:
+          allOf:
+            - $ref: '#/components/schemas/LastModdifiedCollections'
+          description: Collections which the user have read access to.
+      required:
+        - srvDate
+        - collections
+    NotAcceptableFailedResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+      required:
+        - status
+    NotFoundFailedResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+      required:
+        - status
+    Profile:
+      type: object
+      properties:
+        some_property:
+          type: string
+      required:
+        - some_property
+      allOf:
+        - $ref: '#/components/schemas/DocumentBase'
+    Settings:
+      type: object
+      properties:
+        some_property:
+          type: string
+      required:
+        - some_property
+      allOf:
+        - $ref: '#/components/schemas/DocumentBase'
+    StatusResult:
+      type: object
+      properties:
+        version:
+          $ref: '#/components/schemas/VersionResult'
+        apiPermissions:
+          $ref: '#/components/schemas/ApiPermissions'
+      required:
+        - version
+        - apiPermissions
+    Storage:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of storage engine used
+        version:
+          type: string
+          description: Version of the storage engine
+      required:
+        - type
+        - version
+    Treatment:
+      type: object
+      properties:
+        eventType:
+          type: string
+        glucose:
+          type: string
+        glucoseType:
+          type: string
+        units:
+          type: string
+        carbs:
+          type: number
+          format: float
+        protein:
+          type: number
+          format: float
+        fat:
+          type: number
+          format: float
+        insulin:
+          type: number
+          format: float
+        duration:
+          type: number
+          format: float
+        preBolus:
+          type: number
+          format: float
+        splitNow:
+          type: number
+          format: float
+        splitExt:
+          type: number
+          format: float
+        percent:
+          type: number
+          format: float
+        absolute:
+          type: number
+          format: float
+        targetTop:
+          type: number
+          format: float
+        targetBottom:
+          type: number
+          format: float
+        profile:
+          type: string
+        reason:
+          type: string
+        notes:
+          type: string
+        enteredBy:
+          type: string
+      required:
+        - eventType
+      allOf:
+        - $ref: '#/components/schemas/DocumentBase'
+    UnauthenticatedFailedResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+      required:
+        - status
+    UnauthorizedFailedResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+      required:
+        - status
+    VersionResult:
+      type: object
+      properties:
+        version:
+          type: string
+          description: The whole Nightscout instance version
+        apiVersion:
+          type: string
+          description: API v3 subsystem version
+        srvDate:
+          type: integer
+          format: int64
+          description: Actual server date and time in UNIX epoch format
+        storage:
+          allOf:
+            - $ref: '#/components/schemas/Storage'
+          description: Type of storage engine used
+      required:
+        - version
+        - apiVersion
+        - srvDate
+        - storage
+    createdDocument:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        identifier:
+          type: string
+        lastModified:
+          type: integer
+          format: int64
+      required:
+        - status
+        - identifier
+        - lastModified
+    updatedDocument:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        identifier:
+          type: string
+        isDeduplication:
+          type: boolean
+        deduplicatedIdentifier:
+          type: string
+      required:
+        - status
+        - identifier
+  securitySchemes:
+    AccessToken:
+      type: apiKey
+      in: query
+      name: token
+    JwtToken:
+      type: http
+      scheme: bearer
+servers:
+  - url: /api/v3
+    description: default endpoint
+    variables: {}
