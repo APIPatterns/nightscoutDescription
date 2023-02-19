@@ -10,12 +10,19 @@ created: '2023-02-16'
 specificationVersion: '0.15'
 apis:
     - 
-        name: NightScout
+        name: NightScout Official
         description: API for accessing continuous glucose monitoring data
         properties:
             - 
                 type: X-openapi
                 url: 'https://raw.githubusercontent.com/nightscout/cgm-remote-monitor/master/lib/api3/swagger.yaml'
+    - 
+        name: NightScout from CADL
+        description: API for accessing continuous glucose monitoring data 
+        properties:
+            - 
+                type: X-openapi
+                url: 'https://raw.githubusercontent.com/apidescriptions/nightscout/main/spec/cadl-output/%40cadl-lang/openapi3/openapi.yaml'
 
 maintainers:
     - 
