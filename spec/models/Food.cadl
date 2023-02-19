@@ -91,5 +91,5 @@ model Food extends DocumentBase {
   hidden?: boolean;
   position?: float32;
   portions?: float32;
-  foods?: [Food]
+  // foods?: [Food]  // Removed temporarily to avoid circular dependency
 }

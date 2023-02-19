@@ -3247,10 +3247,6 @@ components:
         portions:
           type: number
           format: float
-        foods:
-          type: array
-          items: {}
-          x-cadl-name: '[Food]'
       allOf:
         - $ref: '#/components/schemas/DocumentBase'
     GoneFailedResponse:
